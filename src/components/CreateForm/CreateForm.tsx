@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid2";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {createDishes, editDishes} from "../../store/thunks/dishesThunks.ts";
 import {RootState} from "../../app/store.ts";
+import {resetSelectedDishes} from "../../store/slices/dishesSlice.ts";
 
 
 const initialState = {
@@ -23,7 +24,10 @@ const CreateForm = () => {
         } else {
             setForm(initialState);
         }
-    }, []);
+        return () => {
+            dispatch(resetSelectedDishes());
+        };
+    }, [dispatch,selectedDishes]);
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({...form, [e.target.name]: e.target.value});

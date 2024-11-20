@@ -12,7 +12,7 @@ const Navbar = () => {
                         <Typography
                             variant="h6"
                             component={NavLink}
-                            to="admin"
+                            to={location.pathname.startsWith('/admin') ? '/admin' : '/'}
                             sx={{flexGrow: 1, textDecoration: "none", color: "white"}}
                         >
                             {location.pathname.startsWith('/admin') ? 'Turtle Pizza Admin' : 'Turtle Pizza '}

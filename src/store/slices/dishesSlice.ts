@@ -22,6 +22,9 @@ export const dishesSlice = createSlice({
     reducers: {
         getDishesData: (state, action: PayloadAction<DishesMutation>) => {
             state.selectedDishes = action.payload;
+        },
+        resetSelectedDishes: (state) => {
+            state.selectedDishes = null;
         }
     },
     extraReducers: (builder) => {
@@ -48,4 +51,4 @@ export const dishesSlice = createSlice({
     }
 });
 
-export const {getDishesData} = dishesSlice.actions;
+export const {getDishesData,resetSelectedDishes} = dishesSlice.actions;
