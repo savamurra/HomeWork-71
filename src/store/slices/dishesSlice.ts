@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {DishesMutation} from "../../types";
 import {RootState} from "../../app/store.ts";
-import {editDishes, getDishes} from "../thunks/dishesThunks.ts";
+import {deleteDishes, editDishes, getDishes} from "../thunks/dishesThunks.ts";
 
 interface DishesSliceState {
     dishes: DishesMutation[]
@@ -47,8 +47,17 @@ export const dishesSlice = createSlice({
             })
             .addCase(editDishes.rejected, (state) => {
                 state.isLoading = false;
+            })
+            .addCase(deleteDishes.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteDishes.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(deleteDishes.rejected, (state) => {
+                state.isLoading = false;
             });
     }
 });
 
-export const {getDishesData,resetSelectedDishes} = dishesSlice.actions;
+export const {getDishesData, resetSelectedDishes} = dishesSlice.actions;

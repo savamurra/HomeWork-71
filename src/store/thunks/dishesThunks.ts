@@ -30,3 +30,7 @@ export const editDishes = createAsyncThunk<void, DishesMutation>('dishes/editDis
     const {id, ...data} = dishes;
     await axiosApi.put(`dishes/${id}.json`, data);
 });
+
+export const deleteDishes = createAsyncThunk<void, string>('dishes/deleteDishes', async (id: string) => {
+   await axiosApi.delete(`dishes/${id}.json`);
+});
