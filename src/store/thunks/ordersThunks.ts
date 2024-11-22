@@ -9,7 +9,7 @@ export const createOrders = createAsyncThunk<void, OrderType>('orders/createDish
 
 export const fetchOrders = createAsyncThunk<DishOrder[], void, { state: RootState }>(
     'dishes/fetchOrders', async (_arg, thunkAPI) => {
-        const response: { data: {[key: string]: OrderType} } = await axiosApi.get(`orders.json`);
+        const response: { data: { [key: string]: OrderType } } = await axiosApi.get(`orders.json`);
         const orderList = response.data;
 
         if (!orderList) {
@@ -25,7 +25,7 @@ export const fetchOrders = createAsyncThunk<DishOrder[], void, { state: RootStat
             Object.keys(innerId).map((secondId) => {
                 const count = innerId[secondId];
                 const dish = state.find((item) => item.id === secondId);
-                if (dish){
+                if (dish) {
                     orders.push({
                         order: dish,
                         count: Number(count),

@@ -1,4 +1,3 @@
-
 const Home = () => {
     const styles = {
         background: "url(https://i.pinimg.com/736x/50/97/ab/5097ab52bc68a49e5d006d0c55a5fed1.jpg) no-repeat",

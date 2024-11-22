@@ -26,6 +26,7 @@ export const openModals = (state: RootState) => state.orders.isOpenModal;
 export const deliverCost = ((state: RootState) => state.orders.deliver);
 export const getAllOrders = ((state: RootState) => state.orders.finalOrder);
 export const isLoading = ((state: RootState) => state.orders.isLoading);
+export const isDelete = ((state: RootState) => state.orders.isDeleteLoading);
 
 export const ordersSlice = createSlice({
     name: 'orders',
