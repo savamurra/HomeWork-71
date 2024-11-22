@@ -18,6 +18,7 @@ export interface DishesList {
 export interface DishOrder {
     order: DishesMutation;
     count: number;
+    mainId?: string
 }
 
 export interface OrderType {

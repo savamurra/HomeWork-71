@@ -1,19 +1,39 @@
 import {Box, Button, Typography} from "@mui/material";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
-import {getAllOrders} from "../../store/slices/ordersSlice.ts";
-import {useEffect} from "react";
-import {fetchOrders} from "../../store/thunks/ordersThunks.ts";
+import {deliverCost, getAllOrders} from "../../store/slices/ordersSlice.ts";
+import {useCallback, useEffect} from "react";
+import {deleteOrders, fetchOrders} from "../../store/thunks/ordersThunks.ts";
 import {getDishes} from "../../store/thunks/dishesThunks.ts";
+import {DishOrder} from "../../types";
 
 
 const Orders = () => {
     const dispatch = useAppDispatch();
     const orders = useAppSelector(getAllOrders);
+    const deliver = useAppSelector(deliverCost);
 
-    const totalSum = orders.reduce((acc, order) => {
-        acc += order.order.price * order.count;
+    const groupedOrders = orders.reduce((acc, order) => {
+        const { mainId } = order;
+
+        if (!mainId) {
+            return acc;
+        }
+
+        if (!acc[mainId]) {
+            acc[mainId] = { mainId, items: [], total: 0 };
+        }
+
+        acc[mainId].items.push(order);
+        acc[mainId].total += order.order.price * order.count;
+
         return acc;
-    },0);
+    }, {} as {[key: string]: { mainId: string; items: DishOrder[]; total: number }});
+
+   const onDelete = useCallback(async (id: string) => {
+         await dispatch(deleteOrders(id));
+         await dispatch(fetchOrders());
+   },[dispatch]);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,38 +44,54 @@ const Orders = () => {
     }, [dispatch]);
 
     return (
-        <div>
-            <Box sx={{
-                width: "100%",
-                maxWidth: 600,
-                margin: "auto",
-                mt: 4,
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-                borderRadius: 2,
-                p: 2,
-                backgroundColor: "white",
-            }}>
-                <Typography variant="h6" align="center" gutterBottom>
-                    🛒 Orders
-                </Typography>
-                {orders.map((dish) => (
-                    <div style={{display: "flex", justifyContent: "space-between", flexDirection: "column"}}
-                    key={dish.order.id + crypto.randomUUID()}
-                    >
-                        <div style={{display: "flex", justifyContent: "space-around"}}>
-                            <Typography>x{dish.count} {dish.order.title}</Typography>
-                            <Typography>{dish.order.price}</Typography>
-                        </div>
-                    </div>
-                ))}
-                <div style={{display: "flex", alignItems: "center", justifyContent: "space-evenly"}}>
-                    <Typography>Order Total</Typography>
-                    <Typography><strong>{totalSum}</strong></Typography>
-                    <Button>Complete Order</Button>
-                </div>
-            </Box>
-        </div>
-    );
+            <>
+                {Object.values(groupedOrders).map((dish) => (
+                        <Box sx={{
+                            width: "100%",
+                            maxWidth: 600,
+                            margin: "auto",
+                            mt: 4,
+                            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+                            borderRadius: 2,
+                            p: 2,
+                            backgroundColor: "white",
+                        }}
+                             key={dish.mainId}
+                        >
+                            <Typography variant="h6" align="center" gutterBottom>
+                                🛒 Orders
+                            </Typography>
+                            {dish.items.map((item) => (
+                                <>
+                                    <div style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        flexDirection: "column"
+                                    }}>
+                                        <div style={{display: "flex", justifyContent: "space-around"}}>
+                                            <Typography>x{item.count} {item.order.title}</Typography>
+                                            <Typography>{item.order.price}</Typography>
+                                        </div>
+                                    </div>
+                                </>
+                            ))}
+                            <div
+                                style={{display: "flex", justifyContent: "space-around"}}>
+                                <div>
+                                    <Typography>Delivery {deliver}</Typography>
+                                </div>
+                                <div style={{display: "flex"}}>
+                                    <Typography sx={{marginRight: 2}}>Order Total</Typography>
+                                    <Typography><strong>{dish.total + deliver}</strong></Typography>
+                                </div>
+                            </div>
+                            <Button sx={{width: '100%'}} onClick={() => onDelete(dish.mainId)}>Complete Order</Button>
+                        </Box>
+                    )
+                )}
+            </>
+    )
+        ;
 };
 
 export default Orders;

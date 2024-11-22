@@ -1,13 +1,14 @@
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {deleteDishes, getDishes} from "../../store/thunks/dishesThunks.ts";
 import {useCallback, useEffect} from "react";
-import {getAllDishes, getDishesData} from "../../store/slices/dishesSlice.ts";
+import {deleteLoading, getAllDishes, getDishesData} from "../../store/slices/dishesSlice.ts";
 import {Box, Button, Typography} from "@mui/material";
 import {NavLink} from "react-router-dom";
 
 const Dishes = () => {
     const dispatch = useAppDispatch();
     const dishes = useAppSelector(getAllDishes);
+    const idDelete = useAppSelector(deleteLoading);
 
     const onDelete = useCallback(async (id: string) => {
         await dispatch(deleteDishes(id));
@@ -50,7 +51,7 @@ const Dishes = () => {
                     <div style={{display: "flex", alignItems: "center"}}>
                         <Typography sx={{marginRight: 5}}>{dishItem.price} KGS</Typography>
                         <Button to='form' component={NavLink} onClick={() => dispatch(getDishesData(dishItem))}>Edit</Button>
-                        <Button onClick={() => onDelete(dishItem.id)}>Delete</Button>
+                        <Button onClick={() => onDelete(dishItem.id)} disabled={idDelete}>Delete</Button>
                     </div>
                 </Box>
             ))}

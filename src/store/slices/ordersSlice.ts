@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import { DishOrder,} from "../../types";
 import {RootState} from "../../app/store.ts";
-import {fetchOrders} from "../thunks/ordersThunks.ts";
+import {createOrders, deleteOrders, fetchOrders} from "../thunks/ordersThunks.ts";
 
 interface OrderState {
     orderDishes: DishOrder[];
@@ -9,6 +9,7 @@ interface OrderState {
     isOpenModal: boolean;
     deliver: number;
     isLoading: boolean;
+    isDeleteLoading: boolean;
 }
 
 const initialState: OrderState = {
@@ -16,13 +17,15 @@ const initialState: OrderState = {
     finalOrder: [],
     isOpenModal: false,
     deliver: 150,
-    isLoading: true,
+    isLoading: false,
+    isDeleteLoading: false,
 };
 
 export const totalOrder = ((state: RootState) => state.orders.orderDishes);
 export const openModals = (state: RootState) => state.orders.isOpenModal;
 export const deliverCost = ((state: RootState) => state.orders.deliver);
 export const getAllOrders = ((state: RootState) => state.orders.finalOrder);
+export const isLoading = ((state: RootState) => state.orders.isLoading);
 
 export const ordersSlice = createSlice({
     name: 'orders',
@@ -55,6 +58,15 @@ export const ordersSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(createOrders.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(createOrders.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(createOrders.rejected, (state) => {
+                state.isLoading = false;
+            })
             .addCase(fetchOrders.pending, (state) => {
                 state.isLoading = true;
             })
@@ -64,6 +76,15 @@ export const ordersSlice = createSlice({
             })
             .addCase(fetchOrders.rejected, (state) => {
                 state.isLoading = false;
+            })
+            .addCase(deleteOrders.pending, (state) => {
+                state.isDeleteLoading = true;
+            })
+            .addCase(deleteOrders.fulfilled, (state) => {
+                state.isDeleteLoading = false;
+            })
+            .addCase(deleteOrders.rejected, (state) => {
+                state.isDeleteLoading = false;
             });
     }
 });

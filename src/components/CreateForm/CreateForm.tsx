@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid2";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {createDishes, editDishes} from "../../store/thunks/dishesThunks.ts";
 import {RootState} from "../../app/store.ts";
-import {resetSelectedDishes} from "../../store/slices/dishesSlice.ts";
+import {editLoading, loading, resetSelectedDishes} from "../../store/slices/dishesSlice.ts";
 
 
 const initialState = {
@@ -17,6 +17,8 @@ const CreateForm = () => {
     const [form, setForm] = useState<DishesForm>(initialState);
     const dispatch = useAppDispatch();
     const selectedDishes = useAppSelector ((state: RootState) => state.dishes.selectedDishes);
+    const isEdit = useAppSelector(editLoading);
+    const isCreate = useAppSelector(loading);
 
     useEffect(() => {
         if (selectedDishes) {
@@ -104,6 +106,7 @@ const CreateForm = () => {
                     </Grid>
                     <Grid size={8}>
                         <Button
+                            disabled={isEdit || isCreate}
                             color="info"
                             type="submit"
                             variant="contained"
