@@ -16,11 +16,14 @@ export interface DishesList {
 }
 
 export interface DishOrder {
-    order: DishesMutation
+    order: DishesMutation;
     count: number;
 }
 
 export interface OrderType {
     [id: string]: number;
 }
+
+
+
 

@@ -33,7 +33,7 @@ const ClientPage = () => {
     return (
         <>
             <Modal />
-            {dishes?.map((dishItem) => (
+            {dishes.map((dishItem) => (
                 <Box key={dishItem.id} sx={{
                     display: "flex",
                     alignItems: "center",

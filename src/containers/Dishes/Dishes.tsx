@@ -30,19 +30,21 @@ const Dishes = () => {
                 <Typography variant='h5'>Dishes</Typography>
                 <Button to="form" component={NavLink}>Add new dish</Button>
             </Box>
-            {dishes?.map((dishItem) => (
+            {dishes.map((dishItem) => (
                 <Box key={dishItem.id} sx={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: 'space-between',
                     margin: 'auto',
-                    border: "1px solid #eee",
-                    width: 600,
+                    border: "3px solid DodgerBlue",
+                    borderRadius: 4,
+                    width: 1000,
+                    padding: 1,
                     marginBottom: 2,
                 }}>
                     <div style={{display: "flex", alignItems: "center"}}>
                         <img src={dishItem.image} alt={dishItem.title}
-                             style={{width: 100, height: 100, marginRight: 20}}/>
+                             style={{width: 180, marginRight: 20}}/>
                         <Typography>{dishItem.title}</Typography>
                     </div>
                     <div style={{display: "flex", alignItems: "center"}}>

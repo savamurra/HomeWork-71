@@ -22,7 +22,7 @@ const Navbar = () => {
                                 <Button color="inherit" to="admin/dishes" component={NavLink}>
                                     Dishes
                                 </Button>
-                                <Button color="inherit" to="admin/order" component={NavLink}>
+                                <Button color="inherit" to="admin/orders" component={NavLink}>
                                     Order
                                 </Button>
                             </>

@@ -1,22 +1,28 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {DishOrder} from "../../types";
+import { DishOrder,} from "../../types";
 import {RootState} from "../../app/store.ts";
+import {fetchOrders} from "../thunks/ordersThunks.ts";
 
 interface OrderState {
     orderDishes: DishOrder[];
+    finalOrder: DishOrder[];
     isOpenModal: boolean;
     deliver: number;
+    isLoading: boolean;
 }
 
 const initialState: OrderState = {
     orderDishes: [],
+    finalOrder: [],
     isOpenModal: false,
-    deliver: 150
+    deliver: 150,
+    isLoading: true,
 };
 
 export const totalOrder = ((state: RootState) => state.orders.orderDishes);
 export const openModals = (state: RootState) => state.orders.isOpenModal;
 export const deliverCost = ((state: RootState) => state.orders.deliver);
+export const getAllOrders = ((state: RootState) => state.orders.finalOrder);
 
 export const ordersSlice = createSlice({
     name: 'orders',
@@ -46,7 +52,20 @@ export const ordersSlice = createSlice({
                 }
             }
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchOrders.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(fetchOrders.fulfilled, (state, action: PayloadAction<DishOrder[]>) => {
+                state.finalOrder = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(fetchOrders.rejected, (state) => {
+                state.isLoading = false;
+            });
     }
 });
 
-export const { addOrder, openModal, closeModal, deleteOrder } = ordersSlice.actions;
+export const {addOrder, openModal, closeModal, deleteOrder} = ordersSlice.actions;
